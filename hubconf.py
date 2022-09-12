@@ -74,43 +74,50 @@ def get_rf_results():
 
 """###SVC"""
 
-svc = SVC()
+def get_svc_results():
+    svc = SVC()
 
-params = {'kernel': ['linear', 'rbf'], 'C': [1, 10, 100]}
+    params = {'kernel': ['linear', 'rbf'], 'C': [1, 10, 100]}
 
-clf = GridSearchCV(svc, params, scoring='roc_auc')
+    clf = GridSearchCV(svc, params, scoring='roc_auc')
 
-clf.fit(X_circles, y_circles)
+    clf.fit(X_circles, y_circles)
 
-all_results['Best Parameters'].append(clf.best_params_)
-clf.best_params_
+    all_results['Best Parameters'].append(clf.best_params_)
+    clf.best_params_
 
-results_table = pd.DataFrame.from_dict(clf.cv_results_)
-results_table.sort_values(by='rank_test_score')
+    results_table = pd.DataFrame.from_dict(clf.cv_results_)
+    results_table.sort_values(by='rank_test_score')
+
+    return results_table
 
 """###MLP"""
 
-mlp = MLPClassifier()
+def get_mlp_results():
+    mlp = MLPClassifier()
 
-alphas = np.logspace(-1, 1, 5)
+    alphas = np.logspace(-1, 1, 5)
 
-params = {'hidden_layer_sizes': [(32), (64), (32, 32)], 'activation': ['identity', 'logistic', 'tanh', 'relu'], 'solver': ['lbfgs', 'sgd', 'adam'], 'alpha': alphas}
+    params = {'hidden_layer_sizes': [(32), (64), (32, 32)], 'activation': ['identity', 'logistic', 'tanh', 'relu'], 'solver': ['lbfgs', 'sgd', 'adam'], 'alpha': alphas}
 
-clf = GridSearchCV(mlp, params, scoring='roc_auc')
+    clf = GridSearchCV(mlp, params, scoring='roc_auc')
 
-clf.fit(X_circles, y_circles)
+    clf.fit(X_circles, y_circles)
 
-all_results['Best Parameters'].append(clf.best_params_)
-clf.best_params_
+    all_results['Best Parameters'].append(clf.best_params_)
+    clf.best_params_
 
-results_table = pd.DataFrame.from_dict(clf.cv_results_)
-results_table.sort_values(by='rank_test_score')
+    results_table = pd.DataFrame.from_dict(clf.cv_results_)
+    results_table.sort_values(by='rank_test_score')
+
+    return results_table
 
 """#MNIST Digits
 
 ###Random Forest
 """
 
+'''
 rf = RandomForestClassifier()
 
 params = {'max_depth': [1, 10, None], 'criterion': ['gini', 'entropy']}
@@ -163,3 +170,5 @@ results_table.sort_values(by='rank_test_score')
 
 summary_table = pd.DataFrame.from_dict(all_results)
 summary_table
+
+'''
