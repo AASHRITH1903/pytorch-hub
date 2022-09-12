@@ -18,54 +18,49 @@ Roll: CS19B025
 """
 
 import numpy as np
-
 import pandas as pd
-
 from sklearn.datasets import load_digits, make_circles
-
 from sklearn.model_selection import GridSearchCV
-
 import matplotlib.pyplot as plt
-
 from sklearn.ensemble import RandomForestClassifier
-
 from sklearn.metrics import roc_auc_score
-
 from sklearn.svm import SVC
-
 from sklearn.neural_network import MLPClassifier
 
 """#Datasets"""
 
-X_circles, y_circles = make_circles(n_samples=1000, noise=0.03)
+def get_circles_data():
+    X_circles, y_circles = make_circles(n_samples=1000, noise=0.03)
 
-plt.scatter(X_circles[:, 0], X_circles[:, 1])
+    return X_circles, y_circles
 
-X_digits, y_digits = load_digits(return_X_y=True)
+# plt.scatter(X_circles[:, 0], X_circles[:, 1])
 
-X_digits.shape, y_digits.shape
+def get_digits_data():
+    X_digits, y_digits = load_digits(return_X_y=True)
+    return X_digits, y_digits
 
-plt.matshow(X_digits[567].reshape(8,8))
+# X_digits.shape, y_digits.shape
+# plt.matshow(X_digits[567].reshape(8,8))
+# print(y_digits[567])
 
-print(y_digits[567])
-
-all_results = {'Dataset': ['Concentric Circles', 'Concentric Circles', 'Concentric Circles', 'MNIST digits', 'MNIST digits', 'MNIST digits'], 'Classifier': ['Random Forest', 'SVC', 'MLP', 'Random Forest', 'SVC', 'MLP'], 'Best Parameters': []}
+# all_results = {'Dataset': ['Concentric Circles', 'Concentric Circles', 'Concentric Circles', 'MNIST digits', 'MNIST digits', 'MNIST digits'], 'Classifier': ['Random Forest', 'SVC', 'MLP', 'Random Forest', 'SVC', 'MLP'], 'Best Parameters': []}
 
 """#Concentric Circles
 
 ###Random Forest
 """
-def get_rf_results():
+def get_rf_results(X, y):
     rf = RandomForestClassifier()
 
     params = {'max_depth': [1, 10, None], 'criterion': ['gini', 'entropy']}
 
     clf = GridSearchCV(rf, params, scoring='roc_auc')
 
-    clf.fit(X_circles, y_circles)
+    clf.fit(X, y)
 
-    all_results['Best Parameters'].append(clf.best_params_)
-    clf.best_params_
+    # all_results['Best Parameters'].append(clf.best_params_)
+    # clf.best_params_
 
     results_table = pd.DataFrame.from_dict(clf.cv_results_)
     results_table.sort_values(by='rank_test_score')
@@ -74,17 +69,17 @@ def get_rf_results():
 
 """###SVC"""
 
-def get_svc_results():
+def get_svc_results(X, y):
     svc = SVC()
 
     params = {'kernel': ['linear', 'rbf'], 'C': [1, 10, 100]}
 
     clf = GridSearchCV(svc, params, scoring='roc_auc')
 
-    clf.fit(X_circles, y_circles)
+    clf.fit(X, y)
 
-    all_results['Best Parameters'].append(clf.best_params_)
-    clf.best_params_
+    # all_results['Best Parameters'].append(clf.best_params_)
+    # clf.best_params_
 
     results_table = pd.DataFrame.from_dict(clf.cv_results_)
     results_table.sort_values(by='rank_test_score')
@@ -93,7 +88,7 @@ def get_svc_results():
 
 """###MLP"""
 
-def get_mlp_results():
+def get_mlp_results(X, y):
     mlp = MLPClassifier()
 
     alphas = np.logspace(-1, 1, 5)
@@ -102,10 +97,10 @@ def get_mlp_results():
 
     clf = GridSearchCV(mlp, params, scoring='roc_auc')
 
-    clf.fit(X_circles, y_circles)
+    clf.fit(X, y)
 
-    all_results['Best Parameters'].append(clf.best_params_)
-    clf.best_params_
+    # all_results['Best Parameters'].append(clf.best_params_)
+    # clf.best_params_
 
     results_table = pd.DataFrame.from_dict(clf.cv_results_)
     results_table.sort_values(by='rank_test_score')
